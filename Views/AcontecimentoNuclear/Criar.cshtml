@@ -1,4 +1,4 @@
-﻿@model RegistraNuclearTech.Models.AcontecimentoNuclear
+@model RegistraNuclearTech.Models.AcontecimentoNuclear
 
 @{
     ViewData["Title"] = "Cadastrar Acontecimento Nuclear";
@@ -163,7 +163,7 @@
 
                             <div class="col-12 col-md-4">
                                 <label asp-for="Ano" class="form-label fw-semibold text-white">Ano do Evento</label>
-                                <input asp-for="Ano" type="number" class="form-control rnt-input rounded-3" placeholder="Ex: 2024" min="1890" max="2100" required />
+                                <input asp-for="Ano" type="number" class="form-control rnt-input rounded-3" placeholder="Ex: 2024" min="1890" max="2030" required />
                                 <span asp-validation-for="Ano" class="text-danger small"></span>
                             </div>
 

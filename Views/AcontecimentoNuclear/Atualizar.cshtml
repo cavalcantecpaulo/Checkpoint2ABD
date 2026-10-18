@@ -1,7 +1,7 @@
-﻿@model RegistraNuclearTech.Models.AcontecimentoNuclear
+@model RegistraNuclearTech.Models.AcontecimentoNuclear
 
 @{
-    ViewData["Title"] = "Editar Acontecimento Nuclear";
+    ViewData["Title"] = "Atualizar Acontecimento Nuclear";
 }
 
 <style>
@@ -154,7 +154,7 @@
                             <span class="text-uppercase fw-semibold small d-block" style="color: var(--rnt-cyan); letter-spacing: 0.07em;">
                                 Atualização Cadastral
                             </span>
-                            <h1 class="h4 fw-bold mb-0 rnt-title-gradient">Editar Acontecimento Nuclear</h1>
+                            <h1 class="h4 fw-bold mb-0 rnt-title-gradient">Atualizar Acontecimento Nuclear</h1>
                         </div>
                     </div>
                     <span class="rnt-id-badge">ID @Model.Id</span>
@@ -174,7 +174,7 @@
 
                             <div class="col-12 col-md-4">
                                 <label asp-for="Ano" class="form-label fw-semibold text-white">Ano do Evento</label>
-                                <input asp-for="Ano" type="number" class="form-control rnt-input rounded-3" min="1890" max="2100" required />
+                                <input asp-for="Ano" type="number" class="form-control rnt-input rounded-3" min="1890" max="2030" required />
                                 <span asp-validation-for="Ano" class="text-danger small"></span>
                             </div>
 

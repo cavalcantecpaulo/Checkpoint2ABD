@@ -35,24 +35,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNvbnRlY2ltZW50b051Y2xlYXJcRGV0YWxoZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/paulo_xeqkecn/source/repos/RegistraNuclearTech/Views/AcontecimentoNuclear/Editar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNvbnRlY2ltZW50b051Y2xlYXJcRWRpdGFyLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/paulo_xeqkecn/source/repos/RegistraNuclearTech/Views/AcontecimentoNuclear/Excluir.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNvbnRlY2ltZW50b051Y2xlYXJcRXhjbHVpci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/paulo_xeqkecn/source/repos/RegistraNuclearTech/Views/AcontecimentoNuclear/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNvbnRlY2ltZW50b051Y2xlYXJcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/paulo_xeqkecn/source/repos/RegistraNuclearTech/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/paulo_xeqkecn/source/repos/RegistraNuclearTech/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/paulo_xeqkecn/source/repos/RegistraNuclearTech/Views/Shared/Error.cshtml]

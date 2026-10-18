@@ -1,0 +1,32 @@
+﻿## Pastas residuais de Agentes, IA e IDEs
+.agents/
+.gemini/
+.idea/
+.vs/
+skills/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Arquivos de compilação intermediários e temporários
+[Oo]bj/
+[Bb]uildLog.*
+*.VisualState.xml
+TestResult*
+*.tmp
+
+## Arquivos de log e relatórios temporários
+*.log
+RELATORIO.md
+
+## Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## ATENÇÃO CHECKPOINT 2: 
+## As pastas bin/Debug e bin/Release são exigidas fisicamente no .zip da entrega.
+## Por padrão de projetos .NET elas ficariam ignoradas, mas garantimos que 
+## o gitignore padrão não atrapalhe a solução localmente:
+[Bb]in/

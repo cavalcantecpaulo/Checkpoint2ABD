@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using RegistraNuclearTech.Models;
 using RegistraNuclearTech.Repositories;
 
@@ -90,13 +90,6 @@ public class AcontecimentoNuclearController : Controller
 
         return RedirectToAction(nameof(Index));
     }
-
-    [HttpGet]
-    public IActionResult Editar(int id) => Atualizar(id);
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Editar(int id, AcontecimentoNuclear acontecimento) => Atualizar(id, acontecimento);
 
     [HttpGet]
     public IActionResult Excluir(int id)
