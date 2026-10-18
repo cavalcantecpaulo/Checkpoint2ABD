@@ -1,0 +1,223 @@
+﻿@model RegistraNuclearTech.Models.AcontecimentoNuclear
+
+@{
+    ViewData["Title"] = "Excluir Acontecimento Nuclear";
+}
+
+<style>
+    :root {
+        --rnt-bg-deep: #0b0f19;
+        --rnt-bg-space: #111827;
+        --rnt-border: rgba(148, 163, 184, 0.2);
+        --rnt-cyan: #00d2ff;
+        --rnt-danger: #f43f5e;
+        --rnt-text-main: #f1f5f9;
+        --rnt-text-muted: #94a3b8;
+    }
+
+    body {
+        background-color: var(--rnt-bg-deep) !important;
+        background-image:
+            radial-gradient(circle at 15% 12%, rgba(244, 63, 94, 0.08), transparent 32%),
+            radial-gradient(circle at 85% 85%, rgba(0, 210, 255, 0.06), transparent 35%);
+        color: var(--rnt-text-main) !important;
+        min-height: 100vh;
+    }
+
+    header .navbar {
+        background-color: rgba(11, 15, 25, 0.9) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--rnt-border) !important;
+    }
+
+    header .navbar .navbar-brand,
+    header .navbar .nav-link {
+        color: var(--rnt-text-main) !important;
+    }
+
+    footer.footer {
+        background-color: rgba(11, 15, 25, 0.92) !important;
+        border-top: 1px solid var(--rnt-border) !important;
+        color: var(--rnt-text-muted) !important;
+    }
+
+    .rnt-card-danger {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(244, 63, 94, 0.35);
+        box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.7);
+    }
+
+    .rnt-danger-header {
+        background: linear-gradient(90deg, rgba(244, 63, 94, 0.16) 0%, rgba(15, 23, 42, 0.4) 100%);
+        border-bottom: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    .rnt-danger-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(244, 63, 94, 0.16);
+        border: 1px solid rgba(244, 63, 94, 0.45);
+    }
+
+    .rnt-alert-box {
+        background: rgba(244, 63, 94, 0.1);
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        color: #fda4af;
+    }
+
+    .rnt-summary-box {
+        background: rgba(11, 15, 25, 0.75);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .rnt-chip-setor {
+        background: rgba(58, 123, 213, 0.15);
+        border: 1px solid rgba(0, 210, 255, 0.3);
+        color: #7dd3fc;
+        padding: 0.3rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+
+    .rnt-chip-positivo {
+        background: rgba(16, 185, 129, 0.14);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: #34d399;
+        padding: 0.3rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+
+    .rnt-chip-negativo {
+        background: rgba(244, 63, 94, 0.15);
+        border: 1px solid rgba(244, 63, 94, 0.45);
+        color: #fb7185;
+        padding: 0.3rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+
+    .btn-rnt-secondary {
+        color: #cbd5e1;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .btn-rnt-secondary:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: #e2e8f0;
+        color: #ffffff;
+    }
+
+    .btn-rnt-danger-solid {
+        background: linear-gradient(135deg, #f43f5e 0%, #dc2626 100%);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(244, 63, 94, 0.35);
+        transition: all 0.2s ease;
+    }
+
+    .btn-rnt-danger-solid:hover {
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 22px rgba(244, 63, 94, 0.55);
+        filter: brightness(1.08);
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-7">
+            <div class="mb-3">
+                <a asp-controller="AcontecimentoNuclear" asp-action="Index" class="text-decoration-none small fw-medium" style="color: var(--rnt-cyan);">
+                    &larr; Cancelar e voltar para a listagem
+                </a>
+            </div>
+
+            <div class="rnt-card-danger rounded-3 overflow-hidden">
+                <div class="rnt-danger-header p-4 d-flex align-items-center gap-3">
+                    <div class="rnt-danger-icon flex-shrink-0" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fb7185" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-uppercase fw-bold small d-block" style="color: #fb7185; letter-spacing: 0.07em;">
+                            Protocolo de Remoção Definitiva
+                        </span>
+                        <h1 class="h4 fw-bold text-white mb-0">Excluir Acontecimento Nuclear</h1>
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <div class="rnt-alert-box rounded-3 p-3 mb-4" role="alert">
+                        <h2 class="h6 fw-bold text-white mb-1">Atenção: Esta ação é permanente e irreversível!</h2>
+                        <p class="mb-0 small">
+                            Ao confirmar a exclusão, o registro abaixo será removido definitivamente da lista em memória e não poderá ser recuperado.
+                        </p>
+                    </div>
+
+                    <h3 class="h6 text-uppercase fw-semibold mb-3" style="color: var(--rnt-text-muted); letter-spacing: 0.05em;">
+                        Resumo do Registro Selecionado
+                    </h3>
+
+                    <div class="p-3 rounded-3 rnt-summary-box mb-4">
+                        <dl class="row mb-0 gy-2">
+                            <dt class="col-sm-4" style="color: var(--rnt-text-muted);">ID do Registro</dt>
+                            <dd class="col-sm-8 fw-bold text-white" style="font-family: monospace;">@Model.Id</dd>
+
+                            <dt class="col-sm-4" style="color: var(--rnt-text-muted);">Título</dt>
+                            <dd class="col-sm-8 fw-semibold text-white">@Model.Titulo</dd>
+
+                            <dt class="col-sm-4" style="color: var(--rnt-text-muted);">Ano / País</dt>
+                            <dd class="col-sm-8 text-white">
+                                <span style="color: var(--rnt-cyan); font-family: monospace; font-weight: 700;">@Model.Ano</span> — @Model.Pais
+                            </dd>
+
+                            <dt class="col-sm-4" style="color: var(--rnt-text-muted);">Setor Aplicado</dt>
+                            <dd class="col-sm-8">
+                                <span class="rnt-chip-setor">@Model.Setor</span>
+                            </dd>
+
+                            <dt class="col-sm-4" style="color: var(--rnt-text-muted);">Impacto</dt>
+                            <dd class="col-sm-8">
+                                @if (Model.ImpactoPositivo)
+                                {
+                                    <span class="rnt-chip-positivo">Impacto Positivo</span>
+                                }
+                                else
+                                {
+                                    <span class="rnt-chip-negativo">Impacto Negativo</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-4" style="color: var(--rnt-text-muted);">Descrição</dt>
+                            <dd class="col-sm-8 text-white mb-0">@Model.Descricao</dd>
+                        </dl>
+                    </div>
+
+                    <form asp-controller="AcontecimentoNuclear" asp-action="Excluir" asp-route-id="@Model.Id" method="post" class="d-flex justify-content-end gap-2">
+                        <input type="hidden" asp-for="Id" />
+                        <a asp-controller="AcontecimentoNuclear" asp-action="Index" class="btn btn-rnt-secondary px-4 py-2 rounded-3">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-rnt-danger-solid px-4 py-2 rounded-3">
+                            Confirmar Exclusão Definitiva
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

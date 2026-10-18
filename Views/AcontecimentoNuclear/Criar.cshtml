@@ -1,0 +1,224 @@
+﻿@model RegistraNuclearTech.Models.AcontecimentoNuclear
+
+@{
+    ViewData["Title"] = "Cadastrar Acontecimento Nuclear";
+}
+
+<style>
+    :root {
+        --rnt-bg-deep: #0b0f19;
+        --rnt-bg-space: #111827;
+        --rnt-border: rgba(148, 163, 184, 0.2);
+        --rnt-cyan: #00d2ff;
+        --rnt-text-main: #f1f5f9;
+        --rnt-text-muted: #94a3b8;
+    }
+
+    body {
+        background-color: var(--rnt-bg-deep) !important;
+        background-image:
+            radial-gradient(circle at 15% 12%, rgba(0, 210, 255, 0.08), transparent 32%),
+            radial-gradient(circle at 85% 85%, rgba(58, 123, 213, 0.08), transparent 35%);
+        color: var(--rnt-text-main) !important;
+        min-height: 100vh;
+    }
+
+    header .navbar {
+        background-color: rgba(11, 15, 25, 0.9) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--rnt-border) !important;
+    }
+
+    header .navbar .navbar-brand,
+    header .navbar .nav-link {
+        color: var(--rnt-text-main) !important;
+    }
+
+    footer.footer {
+        background-color: rgba(11, 15, 25, 0.92) !important;
+        border-top: 1px solid var(--rnt-border) !important;
+        color: var(--rnt-text-muted) !important;
+    }
+
+    .rnt-card {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--rnt-border);
+        box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.65);
+    }
+
+    .rnt-title-gradient {
+        background: linear-gradient(90deg, #ffffff 0%, #7dd3fc 60%, #00d2ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .rnt-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 210, 255, 0.12);
+        border: 1px solid rgba(0, 210, 255, 0.35);
+    }
+
+    .rnt-input,
+    .rnt-select {
+        background-color: rgba(11, 15, 25, 0.8) !important;
+        border: 1px solid rgba(148, 163, 184, 0.28) !important;
+        color: var(--rnt-text-main) !important;
+        padding: 0.65rem 0.95rem;
+    }
+
+    .rnt-input::placeholder {
+        color: #64748b !important;
+    }
+
+    .rnt-select option {
+        background-color: #111827;
+        color: #f1f5f9;
+    }
+
+    .rnt-input:focus,
+    .rnt-select:focus {
+        border-color: var(--rnt-cyan) !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 210, 255, 0.2) !important;
+    }
+
+    .rnt-switch-panel {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(0, 210, 255, 0.25);
+    }
+
+    .form-check-input:checked {
+        background-color: #10b981;
+        border-color: #10b981;
+    }
+
+    .btn-rnt-cyan {
+        background: linear-gradient(135deg, #00d2ff 0%, #2563eb 100%);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(0, 210, 255, 0.28);
+        transition: all 0.2s ease;
+    }
+
+    .btn-rnt-cyan:hover {
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 22px rgba(0, 210, 255, 0.45);
+    }
+
+    .btn-rnt-secondary {
+        color: #cbd5e1;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .btn-rnt-secondary:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: #e2e8f0;
+        color: #ffffff;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="mb-3">
+                <a asp-controller="AcontecimentoNuclear" asp-action="Index" class="text-decoration-none small fw-medium" style="color: var(--rnt-cyan);">
+                    &larr; Voltar para a listagem
+                </a>
+            </div>
+
+            <div class="rnt-card rounded-3 border border-secondary border-opacity-25 overflow-hidden">
+                <div class="p-4 border-bottom border-secondary border-opacity-25 d-flex align-items-center gap-3">
+                    <div class="rnt-icon-box flex-shrink-0" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-uppercase fw-semibold small d-block" style="color: var(--rnt-cyan); letter-spacing: 0.07em;">
+                            Novo Registro
+                        </span>
+                        <h1 class="h4 fw-bold mb-0 rnt-title-gradient">Cadastrar Acontecimento Nuclear</h1>
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <form asp-controller="AcontecimentoNuclear" asp-action="Criar" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3" role="alert"></div>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label asp-for="Titulo" class="form-label fw-semibold text-white">Título do Acontecimento</label>
+                                <input asp-for="Titulo" class="form-control rnt-input rounded-3" placeholder="Ex: Inauguração do Reator Multipropósito Brasileiro" required />
+                                <span asp-validation-for="Titulo" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label asp-for="Ano" class="form-label fw-semibold text-white">Ano do Evento</label>
+                                <input asp-for="Ano" type="number" class="form-control rnt-input rounded-3" placeholder="Ex: 2024" min="1890" max="2100" required />
+                                <span asp-validation-for="Ano" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label asp-for="Pais" class="form-label fw-semibold text-white">País</label>
+                                <input asp-for="Pais" class="form-control rnt-input rounded-3" placeholder="Ex: Brasil" required />
+                                <span asp-validation-for="Pais" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label asp-for="Setor" class="form-label fw-semibold text-white">Setor Aplicado</label>
+                                <select asp-for="Setor" class="form-select rnt-select rounded-3"
+                                        asp-items="Html.GetEnumSelectList<RegistraNuclearTech.Enums.SetorAplicado>()"></select>
+                                <span asp-validation-for="Setor" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Descricao" class="form-label fw-semibold text-white">Descrição Detalhada</label>
+                                <textarea asp-for="Descricao" class="form-control rnt-input rounded-3" rows="4" placeholder="Descreva o contexto técnico, histórico e os desdobramentos deste acontecimento..." required></textarea>
+                                <span asp-validation-for="Descricao" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="p-3 rounded-3 rnt-switch-panel">
+                                    <div class="form-check form-switch">
+                                        <input asp-for="ImpactoPositivo" class="form-check-input" type="checkbox" role="switch" />
+                                        <label asp-for="ImpactoPositivo" class="form-check-label fw-semibold text-white">
+                                            Classificar como Impacto Positivo
+                                        </label>
+                                    </div>
+                                    <small class="d-block mt-1" style="color: var(--rnt-text-muted);">
+                                        Ative para indicar <strong>Impacto Positivo</strong> (avanços médicos, energéticos ou científicos). Mantenha desativado para classificar como <strong>Impacto Negativo</strong>.
+                                    </small>
+                                    <span asp-validation-for="ImpactoPositivo" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 border-secondary border-opacity-25" />
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-controller="AcontecimentoNuclear" asp-action="Index" class="btn btn-rnt-secondary px-4 py-2 rounded-3">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-rnt-cyan px-4 py-2 rounded-3">
+                                Salvar Registro
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -1,0 +1,253 @@
+﻿@model RegistraNuclearTech.Models.AcontecimentoNuclear
+
+@{
+    ViewData["Title"] = "Detalhes do Acontecimento";
+}
+
+<style>
+    :root {
+        --rnt-bg-deep: #0b0f19;
+        --rnt-bg-space: #111827;
+        --rnt-border: rgba(148, 163, 184, 0.2);
+        --rnt-cyan: #00d2ff;
+        --rnt-text-main: #f1f5f9;
+        --rnt-text-muted: #94a3b8;
+    }
+
+    body {
+        background-color: var(--rnt-bg-deep) !important;
+        background-image:
+            radial-gradient(circle at 15% 12%, rgba(0, 210, 255, 0.08), transparent 32%),
+            radial-gradient(circle at 85% 85%, rgba(58, 123, 213, 0.08), transparent 35%);
+        color: var(--rnt-text-main) !important;
+        min-height: 100vh;
+    }
+
+    header .navbar {
+        background-color: rgba(11, 15, 25, 0.9) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--rnt-border) !important;
+    }
+
+    header .navbar .navbar-brand,
+    header .navbar .nav-link {
+        color: var(--rnt-text-main) !important;
+    }
+
+    footer.footer {
+        background-color: rgba(11, 15, 25, 0.92) !important;
+        border-top: 1px solid var(--rnt-border) !important;
+        color: var(--rnt-text-muted) !important;
+    }
+
+    .rnt-card {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--rnt-border);
+        box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.65);
+    }
+
+    .rnt-title-gradient {
+        background: linear-gradient(90deg, #ffffff 0%, #7dd3fc 60%, #00d2ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .rnt-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 210, 255, 0.12);
+        border: 1px solid rgba(0, 210, 255, 0.35);
+    }
+
+    .rnt-info-tile {
+        background: rgba(11, 15, 25, 0.7);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .rnt-year-text {
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        color: var(--rnt-cyan);
+        font-weight: 700;
+    }
+
+    .rnt-chip-setor {
+        background: rgba(58, 123, 213, 0.15);
+        border: 1px solid rgba(0, 210, 255, 0.3);
+        color: #7dd3fc;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .rnt-chip-positivo {
+        background: rgba(16, 185, 129, 0.14);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: #34d399;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .rnt-chip-negativo {
+        background: rgba(244, 63, 94, 0.15);
+        border: 1px solid rgba(244, 63, 94, 0.45);
+        color: #fb7185;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .btn-rnt-cyan {
+        background: linear-gradient(135deg, #00d2ff 0%, #2563eb 100%);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(0, 210, 255, 0.28);
+        transition: all 0.2s ease;
+    }
+
+    .btn-rnt-cyan:hover {
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 22px rgba(0, 210, 255, 0.45);
+    }
+
+    .btn-rnt-secondary {
+        color: #cbd5e1;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .btn-rnt-secondary:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: #e2e8f0;
+        color: #ffffff;
+    }
+
+    .btn-rnt-delete {
+        color: #fb7185;
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        background: rgba(244, 63, 94, 0.08);
+    }
+
+    .btn-rnt-delete:hover {
+        background: rgba(244, 63, 94, 0.25);
+        border-color: #f43f5e;
+        color: #ffffff;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="mb-3">
+                <a asp-controller="AcontecimentoNuclear" asp-action="Index" class="text-decoration-none small fw-medium" style="color: var(--rnt-cyan);">
+                    &larr; Voltar para a listagem
+                </a>
+            </div>
+
+            <div class="rnt-card rounded-3 border border-secondary border-opacity-25 overflow-hidden">
+                <div class="p-4 border-bottom border-secondary border-opacity-25 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rnt-icon-box flex-shrink-0" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-uppercase fw-semibold small d-block" style="color: var(--rnt-cyan); letter-spacing: 0.07em;">
+                                Ficha Executiva
+                            </span>
+                            <h1 class="h4 fw-bold mb-0 rnt-title-gradient">@Model.Titulo</h1>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="rnt-chip-setor">@Model.Setor</span>
+                        @if (Model.ImpactoPositivo)
+                        {
+                            <span class="rnt-chip-positivo">Impacto Positivo</span>
+                        }
+                        else
+                        {
+                            <span class="rnt-chip-negativo">Impacto Negativo</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 rounded-3 rnt-info-tile h-100">
+                                <span class="small d-block" style="color: var(--rnt-text-muted);">ID do Registro</span>
+                                <span class="fs-5 fw-bold text-white" style="font-family: monospace;">@Model.Id</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 rounded-3 rnt-info-tile h-100">
+                                <span class="small d-block" style="color: var(--rnt-text-muted);">Ano do Marco</span>
+                                <span class="fs-5 rnt-year-text">@Model.Ano</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 rounded-3 rnt-info-tile h-100">
+                                <span class="small d-block" style="color: var(--rnt-text-muted);">País de Origem</span>
+                                <span class="fs-5 fw-bold text-white">@Model.Pais</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 rounded-3 rnt-info-tile h-100">
+                                <span class="small d-block" style="color: var(--rnt-text-muted);">Setor Aplicado</span>
+                                <span class="fs-5 fw-bold" style="color: #7dd3fc;">@Model.Setor</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2 class="h6 text-uppercase fw-semibold mb-2" style="color: var(--rnt-text-muted); letter-spacing: 0.05em;">
+                            Descrição Técnica e Histórica
+                        </h2>
+                        <div class="p-3 rounded-3 rnt-info-tile text-white">
+                            <p class="mb-0" style="white-space: pre-line;">@Model.Descricao</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center small p-3 rounded-3 rnt-info-tile" style="color: var(--rnt-text-muted);">
+                        <span><strong class="text-white">Data de Registro:</strong> @Model.DataRegistro.ToString("dd/MM/yyyy 'às' HH:mm:ss")</span>
+                        <span><strong class="text-white">Classificação:</strong> @(Model.ImpactoPositivo ? "Impacto Positivo" : "Impacto Negativo")</span>
+                    </div>
+                </div>
+
+                <div class="p-4 border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                    <a asp-controller="AcontecimentoNuclear" asp-action="Index" class="btn btn-rnt-secondary px-4 py-2 rounded-3">
+                        Voltar
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a asp-controller="AcontecimentoNuclear"
+                           asp-action="Atualizar"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-rnt-cyan px-4 py-2 rounded-3">
+                            Atualizar
+                        </a>
+                        <a asp-controller="AcontecimentoNuclear"
+                           asp-action="Excluir"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-rnt-delete px-4 py-2 rounded-3">
+                            Excluir
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

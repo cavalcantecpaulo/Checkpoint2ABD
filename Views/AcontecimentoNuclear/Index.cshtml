@@ -1,0 +1,694 @@
+﻿@using RegistraNuclearTech.Enums
+@using System.Text.Json
+@model IEnumerable<RegistraNuclearTech.Models.AcontecimentoNuclear>
+
+@{
+    ViewData["Title"] = "Dashboard — RegistraNuclearTech";
+
+    var termoAtual = ViewData["TermoAtual"] as string;
+    var lista = Model?.ToList() ?? new List<RegistraNuclearTech.Models.AcontecimentoNuclear>();
+
+    // Métricas Gerais: Total, Impacto Positivo vs Impacto Negativo
+    var totalRegistros = lista.Count;
+    var totalPositivos = lista.Count(a => a.ImpactoPositivo);
+    var totalNegativos = totalRegistros - totalPositivos;
+
+    var percPositivos = totalRegistros > 0 ? Math.Round((double)totalPositivos / totalRegistros * 100, 1) : 0;
+    var percNegativos = totalRegistros > 0 ? Math.Round((double)totalNegativos / totalRegistros * 100, 1) : 0;
+
+    // Filtragem dinâmica de setores: inclui apenas setores que possuem registros (> 0)
+    var mapaCoresSetor = new Dictionary<SetorAplicado, (string Nome, string Cor)>
+    {
+        { SetorAplicado.Saude, ("Saúde", "#00d2ff") },
+        { SetorAplicado.Energia, ("Energia", "#3b82f6") },
+        { SetorAplicado.Industria, ("Indústria", "#8b5cf6") },
+        { SetorAplicado.Agricultura, ("Agricultura", "#10b981") },
+        { SetorAplicado.Pesquisa, ("Pesquisa", "#f59e0b") }
+    };
+
+    var setoresComRegistros = Enum.GetValues<SetorAplicado>()
+        .Select(setor => new
+        {
+            Setor = setor,
+            Nome = mapaCoresSetor[setor].Nome,
+            Cor = mapaCoresSetor[setor].Cor,
+            Quantidade = lista.Count(a => a.Setor == setor)
+        })
+        .Where(x => x.Quantidade > 0)
+        .ToList();
+
+    var labelsSetoresJson = JsonSerializer.Serialize(setoresComRegistros.Select(x => x.Nome));
+    var dadosSetoresJson = JsonSerializer.Serialize(setoresComRegistros.Select(x => x.Quantidade));
+    var coresSetoresJson = JsonSerializer.Serialize(setoresComRegistros.Select(x => x.Cor));
+
+    var dadosImpactoJson = JsonSerializer.Serialize(new[] { totalPositivos, totalNegativos });
+}
+
+<style>
+    :root {
+        --rnt-bg-deep: #0b0f19;
+        --rnt-bg-space: #111827;
+        --rnt-bg-panel: #131b2e;
+        --rnt-glass: rgba(255, 255, 255, 0.04);
+        --rnt-border: rgba(148, 163, 184, 0.18);
+        --rnt-cyan: #00d2ff;
+        --rnt-blue: #3a7bd5;
+        --rnt-emerald: #10b981;
+        --rnt-danger: #f43f5e;
+        --rnt-text-main: #f1f5f9;
+        --rnt-text-muted: #94a3b8;
+    }
+
+    body {
+        background-color: var(--rnt-bg-deep) !important;
+        background-image:
+            radial-gradient(circle at 12% 10%, rgba(0, 210, 255, 0.08), transparent 32%),
+            radial-gradient(circle at 88% 85%, rgba(58, 123, 213, 0.08), transparent 35%);
+        color: var(--rnt-text-main) !important;
+        min-height: 100vh;
+    }
+
+    header .navbar {
+        background-color: rgba(11, 15, 25, 0.9) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--rnt-border) !important;
+    }
+
+    header .navbar .navbar-brand,
+    header .navbar .nav-link {
+        color: var(--rnt-text-main) !important;
+    }
+
+    header .navbar .nav-link:hover {
+        color: var(--rnt-cyan) !important;
+    }
+
+    footer.footer {
+        background-color: rgba(11, 15, 25, 0.92) !important;
+        border-top: 1px solid var(--rnt-border) !important;
+        color: var(--rnt-text-muted) !important;
+    }
+
+    .rnt-card {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.65);
+    }
+
+    .rnt-brand-badge {
+        width: 54px;
+        height: 54px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: radial-gradient(circle at 30% 30%, rgba(0, 210, 255, 0.22), rgba(19, 27, 46, 0.92));
+        border: 1px solid rgba(0, 210, 255, 0.4);
+        box-shadow: 0 0 22px rgba(0, 210, 255, 0.2);
+    }
+
+    .rnt-brand-title {
+        background: linear-gradient(90deg, #ffffff 0%, #7dd3fc 50%, #00d2ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.02em;
+    }
+
+    .btn-rnt-cyan {
+        background: linear-gradient(135deg, #00d2ff 0%, #2563eb 100%);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(0, 210, 255, 0.28);
+        transition: all 0.2s ease;
+    }
+
+    .btn-rnt-cyan:hover {
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 22px rgba(0, 210, 255, 0.45);
+        filter: brightness(1.07);
+    }
+
+    /* Bloco Unificado de Métricas e Barra de Proporção */
+    .rnt-progress-track {
+        height: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+        display: flex;
+    }
+
+    .rnt-progress-pos {
+        background: linear-gradient(90deg, #10b981, #34d399);
+        transition: width 0.4s ease;
+    }
+
+    .rnt-progress-neg {
+        background: linear-gradient(90deg, #f43f5e, #fb7185);
+        transition: width 0.4s ease;
+    }
+
+    /* Input Dark de Busca */
+    .rnt-search-input {
+        background-color: rgba(11, 15, 25, 0.8) !important;
+        border: 1px solid rgba(148, 163, 184, 0.28) !important;
+        color: var(--rnt-text-main) !important;
+        padding: 0.65rem 1rem;
+    }
+
+    .rnt-search-input::placeholder {
+        color: #64748b !important;
+    }
+
+    .rnt-search-input:focus {
+        border-color: var(--rnt-cyan) !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 210, 255, 0.2) !important;
+    }
+
+    /* Tabela Dark Tech */
+    .rnt-table {
+        --bs-table-bg: transparent;
+        --bs-table-color: var(--rnt-text-main);
+        --bs-table-border-color: rgba(148, 163, 184, 0.12);
+        margin-bottom: 0;
+    }
+
+    .rnt-table thead th {
+        background-color: rgba(15, 23, 42, 0.92) !important;
+        color: #94a3b8 !important;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .rnt-row-positivo {
+        border-left: 4px solid var(--rnt-emerald);
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.06) 0%, transparent 35%);
+    }
+
+    .rnt-row-positivo:hover {
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.13) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+    }
+
+    .rnt-row-negativo {
+        border-left: 4px solid var(--rnt-danger);
+        background: linear-gradient(90deg, rgba(244, 63, 94, 0.07) 0%, transparent 35%);
+    }
+
+    .rnt-row-negativo:hover {
+        background: linear-gradient(90deg, rgba(244, 63, 94, 0.14) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+    }
+
+    .rnt-year-badge {
+        font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: var(--rnt-cyan);
+        background: rgba(0, 210, 255, 0.1);
+        border: 1px solid rgba(0, 210, 255, 0.35);
+        padding: 0.3rem 0.7rem;
+        border-radius: 8px;
+        letter-spacing: 0.04em;
+        display: inline-block;
+    }
+
+    .rnt-chip-pais {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        color: #e2e8f0;
+        padding: 0.32rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .rnt-chip-setor {
+        background: rgba(58, 123, 213, 0.15);
+        border: 1px solid rgba(0, 210, 255, 0.3);
+        color: #7dd3fc;
+        padding: 0.32rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .rnt-chip-positivo {
+        background: rgba(16, 185, 129, 0.14);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: #34d399;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .rnt-chip-negativo {
+        background: rgba(244, 63, 94, 0.15);
+        border: 1px solid rgba(244, 63, 94, 0.45);
+        color: #fb7185;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .btn-rnt-action-info {
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        background: rgba(56, 189, 248, 0.06);
+        transition: all 0.18s ease;
+    }
+
+    .btn-rnt-action-info:hover {
+        background: rgba(56, 189, 248, 0.2);
+        border-color: #38bdf8;
+        color: #ffffff;
+    }
+
+    .btn-rnt-action-edit {
+        color: #cbd5e1;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(255, 255, 255, 0.04);
+        transition: all 0.18s ease;
+    }
+
+    .btn-rnt-action-edit:hover {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: #e2e8f0;
+        color: #ffffff;
+    }
+
+    .btn-rnt-action-delete {
+        color: #fb7185;
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        background: rgba(244, 63, 94, 0.08);
+        transition: all 0.18s ease;
+    }
+
+    .btn-rnt-action-delete:hover {
+        background: rgba(244, 63, 94, 0.25);
+        border-color: #f43f5e;
+        color: #ffffff;
+        box-shadow: 0 0 12px rgba(244, 63, 94, 0.35);
+    }
+
+    .rnt-chart-container {
+        position: relative;
+        height: 260px;
+        width: 100%;
+    }
+</style>
+
+<div class="container py-4">
+    <!-- Cabeçalho e Identidade Visual -->
+    <div class="rnt-card rounded-3 border border-secondary border-opacity-25 p-4 mb-4">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rnt-brand-badge flex-shrink-0" aria-hidden="true">
+                    <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="32" cy="32" rx="26" ry="10" stroke="#00d2ff" stroke-width="2.5" />
+                        <ellipse cx="32" cy="32" rx="26" ry="10" transform="rotate(60 32 32)" stroke="#38bdf8" stroke-width="2.5" />
+                        <ellipse cx="32" cy="32" rx="26" ry="10" transform="rotate(120 32 32)" stroke="#60a5fa" stroke-width="2.5" />
+                        <circle cx="32" cy="32" r="5.5" fill="#00d2ff" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="h3 fw-bold mb-1 rnt-brand-title">RegistraNuclearTech</h1>
+                    <p class="mb-0 small" style="color: var(--rnt-text-muted);">
+                        Monitoramento histórico e analítico de acontecimentos da tecnologia nuclear.
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <a asp-controller="AcontecimentoNuclear" asp-action="Criar" class="btn btn-rnt-cyan px-4 py-2 rounded-3">
+                    Novo Acontecimento
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. Bloco Unificado de Métricas Superiores (Total + Proporção Impacto Positivo vs Impacto Negativo) -->
+    <div class="rnt-card rounded-3 border border-secondary border-opacity-25 p-4 mb-4">
+        <div class="row g-4 align-items-center">
+            <div class="col-12 col-md-4 border-md-end border-secondary border-opacity-25">
+                <span class="text-uppercase small fw-semibold d-block" style="color: var(--rnt-text-muted); letter-spacing: 0.06em;">
+                    Total de Registros
+                </span>
+                <div class="d-flex align-items-baseline gap-3 mt-1">
+                    <span class="display-6 fw-bold text-white mb-0">@totalRegistros</span>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-8">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="rnt-chip-positivo">Impacto Positivo</span>
+                        <span class="fw-bold text-white">@totalPositivos</span>
+                        <small style="color: var(--rnt-text-muted);">(@percPositivos%)</small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <small style="color: var(--rnt-text-muted);">(@percNegativos%)</small>
+                        <span class="fw-bold text-white">@totalNegativos</span>
+                        <span class="rnt-chip-negativo">Impacto Negativo</span>
+                    </div>
+                </div>
+
+                <div class="rnt-progress-track">
+                    @if (totalRegistros > 0)
+                    {
+                        <div class="rnt-progress-pos" style="width: @(percPositivos.ToString(System.Globalization.CultureInfo.InvariantCulture))%" title="Impacto Positivo: @percPositivos%"></div>
+                        <div class="rnt-progress-neg" style="width: @(percNegativos.ToString(System.Globalization.CultureInfo.InvariantCulture))%" title="Impacto Negativo: @percNegativos%"></div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Protagonismo Central: Barra de Busca + Tabela de Listagem -->
+    <div class="rnt-card rounded-3 border border-secondary border-opacity-25 overflow-hidden mb-4">
+        <!-- Cabeçalho da Listagem e Barra de Busca -->
+        <div class="p-3 p-md-4 border-bottom border-secondary border-opacity-25">
+            <div class="row g-3 align-items-center justify-content-between">
+                <div class="col-12 col-lg-4">
+                    <h2 class="h5 fw-bold text-white mb-1">Registros de Acontecimentos</h2>
+                    <p class="small mb-0" style="color: var(--rnt-text-muted);">
+                        Consulte, filtre por país ou gerencie os eventos catalogados.
+                    </p>
+                </div>
+
+                <div class="col-12 col-lg-8">
+                    <form asp-controller="AcontecimentoNuclear" asp-action="Index" method="get" class="row g-2 align-items-center justify-content-lg-end">
+                        <div class="col-12 col-sm-7 col-md-8">
+                            <label for="termoBusca" class="visually-hidden">Buscar por país</label>
+                            <input type="text"
+                                   id="termoBusca"
+                                   name="termoBusca"
+                                   value="@ViewData["TermoAtual"]"
+                                   class="form-control rnt-search-input rounded-3"
+                                   placeholder="Pesquisar acontecimentos por país (ex: Brasil, França, Japão)..." />
+                        </div>
+                        <div class="col-12 col-sm-5 col-md-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-rnt-cyan flex-grow-1 py-2 rounded-3">
+                                Buscar
+                            </button>
+                            <a asp-controller="AcontecimentoNuclear" asp-action="Index" class="btn btn-rnt-action-edit py-2 px-3 rounded-3">
+                                Limpar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Corpo da Tabela -->
+        @if (!lista.Any())
+        {
+            <div class="text-center py-5 px-3">
+                <div class="mb-3">
+                    <span class="rnt-year-badge fs-6">0 REGISTROS</span>
+                </div>
+                <h3 class="h5 fw-bold text-white">Nenhum acontecimento nuclear encontrado</h3>
+                @if (!string.IsNullOrWhiteSpace(termoAtual))
+                {
+                    <p class="mb-3" style="color: var(--rnt-text-muted);">
+                        Não foram localizados eventos para o país <strong class="text-info">"@termoAtual"</strong>.
+                    </p>
+                    <a asp-controller="AcontecimentoNuclear" asp-action="Index" class="btn btn-rnt-action-info btn-sm px-3 py-2 rounded-3">
+                        Limpar busca e exibir todos
+                    </a>
+                }
+                else
+                {
+                    <p class="mb-3" style="color: var(--rnt-text-muted);">
+                        A base em memória ainda não possui eventos registrados.
+                    </p>
+                    <a asp-controller="AcontecimentoNuclear" asp-action="Criar" class="btn btn-rnt-cyan btn-sm px-4 py-2 rounded-3">
+                        + Cadastrar Primeiro Acontecimento
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table rnt-table align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="ps-4">ID</th>
+                            <th scope="col">Ano</th>
+                            <th scope="col">Título</th>
+                            <th scope="col">País</th>
+                            <th scope="col">Setor</th>
+                            <th scope="col">Impacto</th>
+                            <th scope="col" class="text-end pe-4">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in lista)
+                        {
+                            var classeLinha = item.ImpactoPositivo ? "rnt-row-positivo" : "rnt-row-negativo";
+                            <tr class="@classeLinha">
+                                <td class="ps-4 fw-bold text-white" style="font-family: monospace;">
+                                    @item.Id
+                                </td>
+                                <td>
+                                    <span class="rnt-year-badge">@item.Ano</span>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold text-white">@item.Titulo</div>
+                                    <small style="color: var(--rnt-text-muted);">
+                                        Registrado em @item.DataRegistro.ToString("dd/MM/yyyy HH:mm")
+                                    </small>
+                                </td>
+                                <td>
+                                    <span class="rnt-chip-pais">@item.Pais</span>
+                                </td>
+                                <td>
+                                    <span class="rnt-chip-setor">@item.Setor</span>
+                                </td>
+                                <td>
+                                    @if (item.ImpactoPositivo)
+                                    {
+                                        <span class="rnt-chip-positivo">Positivo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="rnt-chip-negativo">Negativo</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex align-items-center gap-2">
+                                        <a asp-controller="AcontecimentoNuclear"
+                                           asp-action="Detalhes"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-rnt-action-info rounded-2 px-3">
+                                            Detalhes
+                                        </a>
+                                        <a asp-controller="AcontecimentoNuclear"
+                                           asp-action="Atualizar"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-rnt-action-edit rounded-2 px-3">
+                                            Atualizar
+                                        </a>
+                                        <a asp-controller="AcontecimentoNuclear"
+                                           asp-action="Excluir"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-rnt-action-delete rounded-2 px-3">
+                                            Excluir
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <!-- 3. Seção Analítica Complementar Abaixo da Tabela (Gráficos de Pizza Preenchidos) -->
+    <div class="rnt-card rounded-3 border border-secondary border-opacity-25 p-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div class="d-flex align-items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                </svg>
+                <div>
+                    <h2 class="h6 fw-bold text-white mb-0">Inteligência Analítica e Distribuição</h2>
+                    <small style="color: var(--rnt-text-muted);">Visualização proporcional dos registros ativos em gráficos de pizza</small>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-rnt-action-edit rounded-2 px-3"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#painelGraficosAnaliticos"
+                    aria-expanded="true"
+                    aria-controls="painelGraficosAnaliticos">
+                Alternar Painel Analítico
+            </button>
+        </div>
+
+        <div class="collapse show" id="painelGraficosAnaliticos">
+            <div class="row g-4 pt-2">
+                <!-- Gráfico 1: Pizza de Setores Existentes -->
+                <div class="col-12 col-lg-6">
+                    <div class="p-3 rounded-3 border border-secondary border-opacity-25 h-100" style="background: rgba(11, 15, 25, 0.5);">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h3 class="h6 fw-bold text-white mb-0">Distribuição por Setor Aplicado</h3>
+                                <small style="color: var(--rnt-text-muted);">Exibe exclusivamente setores com acontecimentos registrados</small>
+                            </div>
+                            <span class="rnt-chip-setor">@setoresComRegistros.Count Setor(es) Ativo(s)</span>
+                        </div>
+                        <div class="rnt-chart-container">
+                            <canvas id="graficoSetores"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico 2: Pizza de Impacto Positivo vs Negativo -->
+                <div class="col-12 col-lg-6">
+                    <div class="p-3 rounded-3 border border-secondary border-opacity-25 h-100" style="background: rgba(11, 15, 25, 0.5);">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h3 class="h6 fw-bold text-white mb-0">Proporção de Impacto</h3>
+                                <small style="color: var(--rnt-text-muted);">Comparativo entre Impacto Positivo e Impacto Negativo</small>
+                            </div>
+                            <span class="rnt-chip-pais">Balanço Geral</span>
+                        </div>
+                        <div class="rnt-chart-container">
+                            <canvas id="graficoImpacto"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script>
+        (() => {
+            const totalRegistros = @totalRegistros;
+            const labelsSetores = @Html.Raw(labelsSetoresJson);
+            const dadosSetores = @Html.Raw(dadosSetoresJson);
+            const coresSetores = @Html.Raw(coresSetoresJson);
+            const dadosImpacto = @Html.Raw(dadosImpactoJson);
+
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = "'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+
+            const formatarTooltip = (context) => {
+                if (totalRegistros === 0) {
+                    return ' Sem registros cadastrados (0%)';
+                }
+                const valor = context.raw || 0;
+                const percentual = ((valor / totalRegistros) * 100).toFixed(1);
+                return ` ${context.label}: ${valor} registro(s) (${percentual}%)`;
+            };
+
+            // 1. Gráfico de Pizza Preenchido: Setores Filtrados Dinamicamente
+            const ctxSetores = document.getElementById('graficoSetores');
+            if (ctxSetores) {
+                new Chart(ctxSetores, {
+                    type: 'pie',
+                    data: {
+                        labels: labelsSetores.length > 0 ? labelsSetores : ['Sem registros'],
+                        datasets: [{
+                            data: dadosSetores.length > 0 ? dadosSetores : [1],
+                            backgroundColor: coresSetores.length > 0 ? coresSetores : ['rgba(148, 163, 184, 0.2)'],
+                            borderColor: '#0b0f19',
+                            borderWidth: 2,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    color: '#e2e8f0',
+                                    padding: 16,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                titleColor: '#00d2ff',
+                                bodyColor: '#f1f5f9',
+                                borderColor: 'rgba(0, 210, 255, 0.35)',
+                                borderWidth: 1,
+                                padding: 12,
+                                callbacks: {
+                                    label: formatarTooltip
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Gráfico de Pizza Preenchido: Impacto Positivo vs Impacto Negativo
+            const ctxImpacto = document.getElementById('graficoImpacto');
+            if (ctxImpacto) {
+                new Chart(ctxImpacto, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Impacto Positivo', 'Impacto Negativo'],
+                        datasets: [{
+                            data: totalRegistros > 0 ? dadosImpacto : [1, 0],
+                            backgroundColor: totalRegistros > 0
+                                ? ['#10b981', '#f43f5e']
+                                : ['rgba(148, 163, 184, 0.2)', 'rgba(148, 163, 184, 0.1)'],
+                            borderColor: '#0b0f19',
+                            borderWidth: 2,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    color: '#e2e8f0',
+                                    padding: 16,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                titleColor: '#00d2ff',
+                                bodyColor: '#f1f5f9',
+                                borderColor: 'rgba(0, 210, 255, 0.35)',
+                                borderWidth: 1,
+                                padding: 12,
+                                callbacks: {
+                                    label: formatarTooltip
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        })();
+    </script>
+}
