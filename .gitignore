@@ -25,8 +25,4 @@ RELATORIO.md
 Thumbs.db
 desktop.ini
 
-## ATENÇÃO CHECKPOINT 2: 
-## As pastas bin/Debug e bin/Release são exigidas fisicamente no .zip da entrega.
-## Por padrão de projetos .NET elas ficariam ignoradas, mas garantimos que 
-## o gitignore padrão não atrapalhe a solução localmente:
 [Bb]in/

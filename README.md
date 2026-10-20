@@ -95,28 +95,28 @@ classDiagram
 #### Dashboard e Listagem Principal (Index.cshtml)
    - Implementação: Contém métricas consolidadas (Total de Registros, Impacto Positivo vs Negativo), barra de busca com formulário GET direcionado ao método BuscarPorPais, tabela centralizada com destaque no ano e setor, e gráficos em pizza (Chart.js) preenchidos dinamicamente de acordo com os dados existentes.
    - Funcionamento: Permite visualizar todos os acontecimentos cadastrados, filtrar por país em tempo real e acessar as ações individuais de cada item.
-![Dashboard](Docs/printInicio.png)
-![Dashboard Vazio](Docs/primeiraTelaVazia.png)
+![Dashboard](Docs/telaInicial2.png)
+<!-- ![Dashboard Vazio](Docs/primeiraTelaVazia.png) -->
 
 #### Cadastro de Acontecimento (Criar.cshtml)
    - Implementação: Formulário em card Dark Tech utilizando Tag Helpers (asp-for, asp-validation-for, asp-items populando o SetorAplicado via Enum). Inclui validações de cliente via _ValidationScriptsPartial.
    - Funcionamento: O usuário informa os dados do evento histórico. Em caso de inconsistência, mensagens de validação impedem o envio. Ao salvar, os dados são persistidos no repositório em memória e o usuário é redirecionado à Index.
-![Cadastro](Docs/print_criar.png)
+![Cadastro](Docs/telaCriacao.png)
 
 #### Atualização de Registro (Atualizar.cshtml)
    - Implementação: Formulário com os campos pré-carregados utilizando `<input type="hidden" asp-for="Id" />` para manter a integridade do identificador.
    - Funcionamento: Permite atualizar títulos, anos, países, setores ou impacto. A data original de registro é preservada no repositório.
-![Atualização](Docs/print_atualizar.png)
+![Atualização](Docs/telaAtualizacao.png)
 
 #### Visualização de Detalhes (Detalhes.cshtml)
    - Implementação: Card estruturado exibindo todas as propriedades da entidade, formatando a data de inclusão e sinalizando o impacto por badges coloridas.
    - Funcionamento: Consulta somente-leitura dos dados de um marco nuclear.
-![Detalhes](Docs/print_detalhes.png)
+![Detalhes](Docs/telaDetalhes.png)
 
 #### Confirmação de Exclusão (Excluir.cshtml)
    - Implementação: Tela dedicada de segurança (atendendo ao requisito explícito de confirmação de exclusão), apresentando um resumo do item a ser excluído e formulário POST com proteção [ValidateAntiForgeryToken].
    - Funcionamento: Garante que nenhum registro seja apagado por engano no navegador. A remoção só é efetivada após o clique no botão de confirmação.
-![Exclusão](Docs/print_excluir.png)
+![Exclusão](Docs/telaExclusao.png)
 
 ## Dependências, Extensões e Bibliotecas
    - Framework / Linguagem: **.NET 10.0 / C# 14 (Visual Studio 2026)** (ASP.NET Core MVC)
